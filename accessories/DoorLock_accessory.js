@@ -34,21 +34,25 @@ lock
   .addService(Service.Door, "Cerradura") // services exposed to the user should have "names" like "Fake Light" for us
   .getCharacteristic(Characteristic.TargetPosition)
   .on('set', function(value, callback) {
-    
-    if (value == 100) {
 
-      console.log("Open Door");
+    if (value != 100) {
+
+      lock
+        .getService(Service.Door)
+        .setCharacteristic(Characteristic.CurrentPosition, value);
+
+      callback();
+
+      return;
+    }
+    
+    console.log("Open Door");
+
+    callback();
 
       lock
         .getService(Service.Door)
         .setCharacteristic(Characteristic.CurrentPosition, 100);
-
-    } else {
-
-      console.log("Closed Door: " + value);
-    }
-
-    callback();
   });
 
   // We want to intercept requests for our current state so we can query the hardware itself instead of
