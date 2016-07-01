@@ -35,24 +35,31 @@ lock
   .getCharacteristic(Characteristic.TargetPosition)
   .on('set', function(value, callback) {
 
-    if (value != 100) {
+    if (value == 0) {
+
+      callback();
+
+      console.log("Close Door");
+
+      state = false
 
       lock
         .getService(Service.Door)
         .setCharacteristic(Characteristic.CurrentPosition, value);
 
+    } else {
+
       callback();
 
-      return;
-    }
-    
-    console.log("Open Door");
+      console.log("Open Door");
 
-    callback();
+      state = true
 
       lock
         .getService(Service.Door)
-        .setCharacteristic(Characteristic.CurrentPosition, 100);
+        .setCharacteristic(Characteristic.CurrentPosition, value);
+
+    }
   });
 
   // We want to intercept requests for our current state so we can query the hardware itself instead of
@@ -62,7 +69,13 @@ lock
   .getCharacteristic(Characteristic.CurrentPosition)
   .on('get', function(callback) {
 
-    console.log("Current Position");
+    console.log("Current Position " + state);
 
-    callback(null, 0);
+    if (state) {
+
+      callback(null, 100);
+    } else {
+
+      callback(null, 0);
+    }
   });
