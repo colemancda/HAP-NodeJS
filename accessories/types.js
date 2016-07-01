@@ -24,6 +24,7 @@ exports.PROGRAMMABLE_SWITCH_TCTYPE = 15;
 
 //HomeKitServiceTypes
 
+exports.DOOR_STYPE = stPre + "81" + stPost;
 exports.LIGHTBULB_STYPE = stPre + "43" + stPost;
 exports.SWITCH_STYPE = stPre + "49" + stPost;
 exports.THERMOSTAT_STYPE = stPre + "4A" + stPost;
