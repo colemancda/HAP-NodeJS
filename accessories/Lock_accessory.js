@@ -2,8 +2,9 @@ var Accessory = require('../').Accessory;
 var Service = require('../').Service;
 var Characteristic = require('../').Characteristic;
 var uuid = require('../').uuid;
-var sleep = require('sleep');
-var child_process = require('child_process')
+var sleep = require('sleep').sleep;
+var sys = require('sys');
+var exec = require('child_process').exec;
 
 // here's a fake hardware device that we'll expose to HomeKit
 var FAKE_LOCK = {
@@ -15,12 +16,13 @@ var FAKE_LOCK = {
   unlock: function() { 
     console.log("Unlocking the lock!");
     FAKE_LOCK.locked = false;
-		
-		child_process.execSync(echo "0" > /sys/class/gpio/gpio6/value)
-		
-		sleep(1)
-		
-		child_process.execSync(echo "1" > /sys/class/gpio/gpio6/value)
+    
+    function puts(error, stdout, stderr) { sys.puts(stdout) }
+    exec("echo \"0\" > /sys/class/gpio/gpio6/value", puts);
+    
+    sleep(1)
+    
+    exec("echo \"1\" > /sys/class/gpio/gpio6/value", puts);
   },
   identify: function() {
     console.log("Identify the lock!");
